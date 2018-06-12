@@ -1,7 +1,7 @@
 //starting up express onto server
 const express = require('express');
 const bodyParser = require('body-parser'); //parses incoming req
-const data = require('../database-mongo');
+const data = require('../database');
 const app = express();
 
 //import google oauth passport package 
@@ -13,7 +13,7 @@ const cookieParser = require('cookie-parser'),
     cookieSession = require('cookie-session');
 
 
-app.use(express.static(__dirname + '/../react-client/dist'));
+app.use(express.static(__dirname + '/../client/dist'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: true}));
 

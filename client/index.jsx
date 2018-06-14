@@ -10,7 +10,6 @@ import QuizSelected from "./components/QuizSelected.jsx";
 import UserData from "./UserExampleData";
 // import 'bootstrap/dist/css/bootstrap.min.css';
 
-const store = createStore(() => [], {}, applyMiddleware());
 
 class App extends React.Component {
   constructor(props) {
@@ -81,7 +80,6 @@ class App extends React.Component {
   //render our nav bar
   render() {
     return (
-      <Provider store={store}>
         <div className="nav">
           <ul>
             <li className="logo">Quiz o' Saurus</li>
@@ -106,7 +104,6 @@ class App extends React.Component {
             <div className="pageRender">{this.currentPage()}</div>
           </div>
         </div>
-      </Provider>
     );
   }
 }

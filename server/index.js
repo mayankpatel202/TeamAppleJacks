@@ -24,6 +24,36 @@ app.get('/home/leaderboard', function (req, res) {
   });
 });
 
+app.get('/auth/google', passport.authenticate('google', {
+  scope: ['https://www.googleapis.com/auth/plus.login']
+}));
+
+app.get('/auth/google/callback', passport.authenticate('google', { failureRedirect: '/login'}),
+  function(req, res) {
+    var googleId = req.user.profile.id;
+    var displayName = req.user.profile.displayName;
+
+    data.confirmUser(googleId, (err, results) => {
+      if (err) {
+        console.log(`error, cannot sign in`);
+      } else if (!results.length) {
+        console.log(`u don't exist, so save to database`);
+        data.saveUser(googleId, displayName, (err, results) => {
+          if (err) {
+            console.log('not working');
+          } else {
+            console.log('congrats, you exist!!');
+            console.log(results);
+          }
+        });
+      } else {
+        console.log(`it already here hunni`);
+      }
+    });
+    
+    res.redirect('/')
+  });
+
 app.listen(port, () => {
   console.log(`Listening on port: ${port}`);
 });

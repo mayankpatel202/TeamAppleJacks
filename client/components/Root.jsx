@@ -18,6 +18,7 @@ class Root extends Component {
     return (
       <div className="rootContainer">
         <div className="loginButton">
+        <button><a href="/auth/google/">Login with Google</a></button>
           <img src={"https://cdn130.picsart.com/238899884057212.png?r1024x1024"} />
         </div>
         <div className="dino-view">
@@ -28,7 +29,6 @@ class Root extends Component {
             }
             className="dino-img"
           />
-
         </div>
       </div>
     );

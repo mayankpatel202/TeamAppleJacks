@@ -2,7 +2,8 @@ var token = require('../config.js')
 
 var mongoose = require('mongoose');
 // mongoose.connect('mongodb://localhost/dinosaurs');
-// mongoose.connect(token.mongoURI);
+ mongoose.connect(token.mongoURI);
+
 
 var db = mongoose.connection;
 
@@ -11,7 +12,7 @@ db.on('error', function () {
 });
 
 db.once('open', function () {
-  console.log('mongoose connected successfully');
+  console.log('quizdb connected successfully');
 });
 
 var userSchema = mongoose.Schema({

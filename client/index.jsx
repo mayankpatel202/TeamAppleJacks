@@ -1,18 +1,14 @@
 import React, { Component } from "react";
 import ReactDOM from "react-dom";
 import $ from "jquery";
-import { Redirect } from 'react-router-dom';
-import Dinosaur from "../../database/exampleData.js";
-import QuizListComponent from "./components/Home/QuizListComponent.jsx";
-import Leaderboard from "./components/LeaderboardComponents/Leaderboard.jsx";
-import { Provider } from 'react-redux';
-import { currentStore, applyMiddleware, createStore } from 'redux';
+import Dinosaur from "../database/exampleData.js";
+import QuizListComponent from "./components/QuizListComponent.jsx";
+import Leaderboard from "./components/Leaderboard.jsx";
 
-import Root from "./components/Root/Root.jsx";
-import QuizSelected from "./components/QuizTaking/QuizSelected.jsx";
+import Root from "./components/Root.jsx";
+import QuizSelected from "./components/QuizSelected.jsx";
 import UserData from "./UserExampleData";
-
-const store = createStore(() => [], {}, applyMiddleware());
+// import 'bootstrap/dist/css/bootstrap.min.css';
 
 class App extends React.Component {
   constructor(props) {
@@ -53,7 +49,7 @@ class App extends React.Component {
 
   //set the data of our quizzes from the server
   quizFetch() {
-    this.ajaxQuizFetch((data) => this.setState({quizzes: data}))
+    this.ajaxQuizFetch((data) => this.setState({ quizzes: data }))
   }
 
   //send our user to the quiz taking page
@@ -67,22 +63,22 @@ class App extends React.Component {
 
   //load different components depending on the website
 
- currentPage() {
-    if(this.state.view === "root") {
-      return <Root /> }
+  currentPage() {
+    if (this.state.view === "root") {
+      return <Root />
+    }
     else if (this.state.view === "home") {
       return <QuizListComponent quizData={Dinosaur.quizzes} clickHandler={this.quizTaking.bind(this)} />;
     } else if (this.state.view === "quizMode") {
-      return <QuizSelected questionsData={Dinosaur.quizzes}/>;
+      return <QuizSelected questionsData={Dinosaur.quizzes} />;
     } else if (this.state.view === "leaderboard") {
       return <Leaderboard data={UserData} />;
     }
   }
 
   //render our nav bar
-  render () {
+  render() {
     return (
-      <Provider store={store}>
         <div className="nav">
           <ul>
             <li className="logo">Quiz o' Saurus</li>
@@ -107,9 +103,8 @@ class App extends React.Component {
             <div className="pageRender">{this.currentPage()}</div>
           </div>
         </div>
-      </Provider>
     );
   }
 }
 
-ReactDOM.render(<App />, document.getElementById("app"));
+ReactDOM.render(< App />, document.getElementById('app'));

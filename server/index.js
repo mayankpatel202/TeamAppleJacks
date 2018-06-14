@@ -25,27 +25,34 @@ let port = process.env.PORT || 3000;
 //------------google oauth------------//
 //redirects client to google login page
 app.get('/', (req, res) => {
-  if (req.session.token) { //if token exists
-    res.cookie('token', req.session.token); //set cookie
-    res.json({
-        status: 'session cookie set'
-    });
-  } else {
-    res.cookie('token', '') //cookie is not set
-    res.json({
-        status: 'session cookie not set'
-    });
-  }
+  console.log(req.user)
+  // if (req.session.token) { //if token exists
+  //   res.cookie('token', req.session.token); //set cookie
+  //   res.json({
+  //       status: 'session cookie set'
+  //   });
+  // } else {
+  //   res.cookie('token', '') //cookie is not set
+  //   res.json({
+  //       status: 'session cookie not set'
+  //   });
+  // }
 });
 
 //redirects client to google login page
 app.get('/auth/google', passport.authenticate('google', {
-    scope: ['https://www.googleapis.com/auth/userinfo.profile']
+    scope: ['https://www.googleapis.com/auth/plus.login']
 }));
 
 //keep key secret so cookie can't b stolen by 3rd parties
 app.use(cookieSession({name: 'session', keys: ['810']}));
 app.use(cookieParser());
+
+app.get('/auth/google/callback', passport.authenticate('google', { failureRedirect: '/login'}),
+  function(req, res) {
+    let profileData = req.user
+    res.redirect('/')
+  });
 
 //after google verifyes from func line 50, this func gets invoked immediately
 app.get('/auth/google',

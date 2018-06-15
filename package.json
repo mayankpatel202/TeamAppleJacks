@@ -2,7 +2,7 @@
   "name": "github-fetcher-fullstack-v2",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "index.jsx",
   "scripts": {
     "react-dev": "webpack --mode development --watch ./client/index.jsx --output ./client/dist/bundle.js",
     "start": "nodemon server/index.js",
@@ -17,6 +17,7 @@
     "babel-preset-env": "^1.7.0",
     "babel-preset-react": "^6.24.1",
     "css-loader": "^0.28.11",
+    "html-loader": "^0.5.5",
     "mongoose": "^5.1.5",
     "react": "^16.4.1",
     "react-dom": "^16.4.1",
@@ -36,6 +37,7 @@
     "nodemon": "^1.17.5",
     "passport": "^0.4.0",
     "passport-google-oauth": "^1.0.0",
+<<<<<<< HEAD
     "passport-jwt": "^4.0.0",
     "react-bootstrap": "^0.32.1",
     "react-reveal": "^1.2.2",
@@ -44,5 +46,14 @@
     "reactstrap": "^6.1.0",
     "underscore": "^1.9.1",
     "validator": "^10.3.0"
+=======
+    "popper.js": "^1.14.3",
+    "react-router": "^4.3.1",
+    "react-router-dom": "^4.3.1",
+    "reactstrap": "^6.1.0",
+    "socket.io": "^2.1.1",
+    "socket.io-client": "^2.1.1",
+    "underscore": "^1.9.1"
+>>>>>>> Install socket.io and create framework for live mode.
   }
 }

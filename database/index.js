@@ -16,6 +16,9 @@ db.once('open', function () {
 });
 
 var userSchema = mongoose.Schema({
+  userName:String,
+  email:String,
+  password:String,
   googleId: String,
   displayName: String,
   globalScore: {

@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const bcrypt = require ('bcryptjs');
 const jwt = require('jsonwebtoken');
+const keys = require('../config.js');
 const passport = require('passport');
 
 //load Input Validation
@@ -22,6 +23,7 @@ router.post('/register',(req,res) => {
     return res.status(400).json(errors);
   }
   const userEmail=req.body.email;
+  console.log(userEmail);
   User.findOne({email:userEmail})
   .then(user => {
     if (user){
@@ -71,7 +73,20 @@ router.post('/login', (req,res) => {
     bcrypt.compare(password, user.password)
       .then(isMatch => {
         if (isMatch){
-          res.json({msg: 'Successfully Login'});
+          //res.json({msg: 'Successfully Login'});
+          console.log('user._id');
+          console.log(user._id);
+          console.log(user.name);
+          const payload = {id: user._id, name:user.name};
+
+          jwt.sign(payload,keys.secretOrKey,{expiresIn: 3600},
+            (err,token) => {
+              res.json({
+                success: true,
+                token:'Bearer' + token
+              });
+            });
+
         } else {
           return res.status(400).json({password: 'Password incorrect'})
         }

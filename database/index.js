@@ -152,6 +152,8 @@ var leaderboardScore = function (callback) {
     .limit(10);
 };
 
+
+module.exports = User = mongoose.model('users',userSchema);
 module.exports.saveUser = saveUser;
 module.exports.saveQuiz = saveQuiz;
 module.exports.confirmUser = confirmUser;

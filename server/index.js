@@ -1,14 +1,21 @@
 const express = require('express');
 const data = require('../database');
 const app = express();
+const bodyParser = require('body-parser');
+
+const users = require('../routes/users');
 
 app.use(express.static(__dirname + '/../client/dist'));
+app.use(bodyParser.urlencoded({extend:false}));
+
 
 const passport = require('passport'),
   auth = require('./auth.js');
 
 auth(passport);
 app.use(passport.initialize());
+app.use(bodyParser.json());
+app.use('/users',users)
 
 let port = process.env.PORT || 3000;
 
@@ -50,7 +57,7 @@ app.get('/auth/google/callback', passport.authenticate('google', { failureRedire
         console.log(`it already here hunni`);
       }
     });
-    
+
     res.redirect('/')
   });
 

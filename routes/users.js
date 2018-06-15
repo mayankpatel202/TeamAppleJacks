@@ -10,8 +10,8 @@ const validateLoginInput = require ('../validation/login');
 
 const User =  require('../database/index.js');
 
-// @route   GET api/users/test
-// @desc    Tests users route
+// @route   GET /users/register
+// @desc    Register users
 // @access  Public
 
 router.post('/register',(req,res) => {
@@ -46,13 +46,18 @@ router.post('/register',(req,res) => {
     })
     }
   })
-  //res.send('posted')
 })
 
-router.get('/register',(req,res) => {
+// router.get('/register',(req,res) => {
 
-  res.send('good morning, it is a nice day')
-})
+//   res.send('good morning, it is a nice day')
+// })
+
+// @route   GET /users/login
+// @desc    Login Users/Returning JWT Token
+// @access  Public
+
+
 
 module.exports = router;
 

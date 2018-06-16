@@ -1,6 +1,8 @@
 const express = require('express');
 const data = require('../database');
+const games = require('../database/index.js')
 const app = express();
+const getMathProblems = require('../sampleMathProblemGenerator.js')
 const bodyParser = require('body-parser');
 
 const users = require('../routes/users');
@@ -9,8 +11,15 @@ app.use(express.static(__dirname + '/../client/dist'));
 app.use(bodyParser.urlencoded({extend:false}));
 
 
+
+
+
+
 const passport = require('passport'),
-  auth = require('./auth.js');
+auth = require('./auth.js');
+
+//getting sample data into database
+//getMathProblems.getMathProblems();
 
 auth(passport);
 app.use(passport.initialize());
@@ -30,6 +39,7 @@ app.get('/home/leaderboard', function (req, res) {
     }
   });
 });
+
 
 app.get('/auth/google', passport.authenticate('google', {
   scope: ['https://www.googleapis.com/auth/plus.login']
@@ -60,6 +70,15 @@ app.get('/auth/google/callback', passport.authenticate('google', { failureRedire
 
     res.redirect('/')
   });
+
+app.get('/games', (req, res) => {
+  console.log(req.url);
+  games.retrieveGames((gameData) => {
+    var data = JSON.stringify(gameData);
+    res.status(200).send(data);
+  });
+});
+
 
 app.listen(port, () => {
   console.log(`Listening on port: ${port}`);

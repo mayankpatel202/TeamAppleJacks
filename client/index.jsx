@@ -1,10 +1,8 @@
 import React, { Component } from "react";
 import ReactDOM from "react-dom";
 import $ from "jquery";
-import Dinosaur from "../database/exampleData.js";
 import QuizListComponent from "./components/QuizListComponent.jsx";
 import Leaderboard from "./components/Leaderboard.jsx";
-
 import Root from "./components/Root.jsx";
 import QuizSelected from "./components/QuizSelected.jsx";
 import UserData from "./UserExampleData";
@@ -15,11 +13,12 @@ class App extends React.Component {
     super(props);
     this.state = {
       view: "root",
-      quizzes: [],
+      games: [],
       currentQuiz: '',
       redirect: false
     };
     this.viewUpdate = this.viewUpdate.bind(this);
+    this.gameFetch = this.gameFetch.bind(this);
   }
 
   //change the view of our website
@@ -30,26 +29,26 @@ class App extends React.Component {
   }
 
   componentDidMount() {
-    this.quizFetch();
+
   }
 
-  //ajax fetch our list of quizzes from the server
-  ajaxQuizFetch(cb) {
+  //set the data of our quizzes from the server
+  gameFetch(view) {
     $.ajax({
-      url: '/home/quizzes',
+      url: '/games',
       method: 'GET',
       success: (data) => {
-        cb(data);
+        data = JSON.parse(data);
+        this.setState({
+          view: view,
+          games: data,
+        })
+        
       },
       err: (err) => {
         console.log('could not fetch', err);
       }
-    })
-  }
-
-  //set the data of our quizzes from the server
-  quizFetch() {
-    this.ajaxQuizFetch((data) => this.setState({ quizzes: data }))
+    });
   }
 
   //send our user to the quiz taking page
@@ -66,9 +65,8 @@ class App extends React.Component {
   currentPage() {
     if (this.state.view === "root") {
       return <Root />
-    }
-    else if (this.state.view === "home") {
-      return <QuizListComponent quizData={Dinosaur.quizzes} clickHandler={this.quizTaking.bind(this)} />;
+    } else if (this.state.view === "game") {
+      return <QuizListComponent gameData={this.state.games}/>;
     } else if (this.state.view === "quizMode") {
       return <QuizSelected questionsData={Dinosaur.quizzes} />;
     } else if (this.state.view === "leaderboard") {
@@ -81,14 +79,14 @@ class App extends React.Component {
     return (
         <div className="nav">
           <ul>
-            <li className="logo">Quiz o' Saurus</li>
+            <li className="logo" onClick={() => this.viewUpdate('root')}>Quiz o' Saurus</li>
             <li
               className="nav-ui"
               onClick={() => {
-                this.viewUpdate("home");
+                this.gameFetch("game");
               }}
             >
-              <a>Home</a>
+              <a>Games</a>
             </li>
             <li
               className="nav-ui"

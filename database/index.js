@@ -1,8 +1,7 @@
 var token = require('../config.js')
-
 var mongoose = require('mongoose');
-// mongoose.connect('mongodb://localhost/dinosaurs');
- mongoose.connect(token.mongoURI);
+
+mongoose.connect(token.mongoURI);
 
 
 var db = mongoose.connection;
@@ -75,6 +74,38 @@ var saveQuiz = function (info, callback) {
     }
   })
 };
+
+//CREATING GAMES SCHEMA - FROOTLOOPS - DONOT DELETE
+var gameSchema = mongoose.Schema({
+    Question: String,
+    Answer: String,
+    Option1: String,
+    Option2: String,
+});
+
+var Games = mongoose.model('Games', gameSchema);
+
+var saveGames = (gameQuestion) => {
+  var game = new Games({
+    Question: gameQuestion.Question,
+    Answer: gameQuestion.Answer,
+    Option1: gameQuestion.Option1,
+    Option2: gameQuestion.Option2
+  });
+  game.save((err, savedGames) => {
+    if(err) console.log('Error in saving game question', err);
+    console.log('Success in saving game Question', savedGames);
+  });
+}
+
+var retrieveGames = (callback) => {
+  Games.find({}, (err, gameData) => {
+    if(err) console.log('Error in getting game data from database ', err);
+    console.log('Success in getting game data from database ');
+    callback(gameData);
+  })
+}
+
 
 // Confirm if user exists
 var confirmUser = function (googleId, callback) {
@@ -160,3 +191,5 @@ module.exports.confirmUser = confirmUser;
 module.exports.returnQuiz = returnQuiz;
 module.exports.incrementScore = incrementScore;
 module.exports.leaderboardScore = leaderboardScore;
+module.exports.saveGames = saveGames;
+module.exports.retrieveGames = retrieveGames;

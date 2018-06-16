@@ -4,15 +4,38 @@ const games = require('../database/index.js')
 const app = express();
 const getMathProblems = require('../sampleMathProblemGenerator.js')
 const bodyParser = require('body-parser');
-
 const users = require('../routes/users');
+const fs = require('fs');
+const textToSpeech = require('@google-cloud/text-to-speech');
+
+const client = new textToSpeech.TextToSpeechClient({
+  keyFilename: './ttsAuth.json'
+});
+
+const text = '1 + 1 = ?';
+
+const request = {
+  input: { text: text },
+  voice: { languageCode: 'en-US', ssmlGender: 'NEUTRAL' },
+  audioConfig: { audioEncoding: 'MP3' }
+};
+
+client.synthesizeSpeech(request, (err, response) => {
+  if (err) {
+    throw err;
+  }
+
+  fs.writeFile('./TextToSpeech/output.mp3', response.audioContent, 'binary', err => {
+    if (err) {
+      throw err;
+    }
+
+    console.log('Audio content written to file: output.mp3');
+  })
+})
 
 app.use(express.static(__dirname + '/../client/dist'));
 app.use(bodyParser.urlencoded({extend:false}));
-
-
-
-
 
 
 const passport = require('passport'),

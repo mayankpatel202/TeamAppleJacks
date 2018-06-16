@@ -83,7 +83,7 @@ router.post('/login', (req,res) => {
             (err,token) => {
               res.json({
                 success: true,
-                token:'Bearer' + token
+                token:'Bearer ' + token
               });
             });
 
@@ -93,6 +93,16 @@ router.post('/login', (req,res) => {
       });
       });
 });
+
+
+// @route   GET /users/current
+// @desc    Returning current usr
+// @access  Private
+router.get('/current', passport.authenticate('jwt',{session:false}),(req, res) => {
+  //res.json({msg: 'Success!'})
+  res.json(req.user);
+
+} )
 
 module.exports = router;
 

@@ -15,7 +15,7 @@ db.once('open', function () {
 });
 
 var userSchema = mongoose.Schema({
-  userName:String,
+  name:String,
   email:String,
   password:String,
   googleId: String,

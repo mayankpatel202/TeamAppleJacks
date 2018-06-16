@@ -26,6 +26,9 @@ app.use(passport.initialize());
 app.use(bodyParser.json());
 app.use('/users',users)
 
+//Passport Config
+require('../passport')(passport)
+
 let port = process.env.PORT || 3000;
 
 app.get('/home/leaderboard', function (req, res) {

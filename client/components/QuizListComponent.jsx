@@ -2,18 +2,25 @@ import React from 'react';
 import QuizListEntry from './QuizListEntry.jsx';
 import Zoom from 'react-reveal/Zoom';
 import _ from 'underscore';
+import Sound from 'react-sound'
 
 class QuizListComponent extends React.Component {
 
 constructor(props) {
   super(props);
   this.rightCount = 1;
-  this.state = { show: true};
+  this.state = { 
+    show: true,
+    filePath: '/output'
+  };
   this.changeQuestion = this.changeQuestion.bind(this);
   this.checkAnswer = this.checkAnswer.bind(this);
   this.count = 0;
   this.rightCount = 0
- 
+}
+
+sendQuestion(question) {
+  axios.post('/quizQuestion', { question: quesion })
 }
 
 checkAnswer(option) {
@@ -27,9 +34,13 @@ checkAnswer(option) {
 
 changeQuestion() {
   setTimeout(() => {
-    this.setState({show: true});
+    this.setState({
+      show: true
+    });
   }, 0);
-  this.setState({ show: false });
+  this.setState({ 
+    show: false
+  });
   this.count++;
 }
 
@@ -45,12 +56,18 @@ render() {
          <div className="quiz-question-display">{this.props.gameData[this.count].Question}</div> 
          <div>
          {shuffledOptions.map((option, index) => {
-           return <span key={index} className="quiz-options-display option-display option-focus" onClick={() => this.checkAnswer(option)}>
-             {option}
-           </span>
+           return (
+            <span key={index} className="quiz-options-display option-display option-focus" onClick={() => this.checkAnswer(option)}>
+              {option}
+            </span>
+           )
          })}
          </div>
          <button className="quiz-button-display click-press" onClick={() => this.changeQuestion()}>SUBMIT</button>
+         {/* <Sound
+            url={this.state.filePath}
+            playStatus={ Sound.status.PLAYING }
+          /> */}
       </div>
   </Zoom> : 
 

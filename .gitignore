@@ -3,4 +3,5 @@ client/dist/bundle.js
 .DS_Store
 config.js
 package-lock.json
-
+ttsAuth.json
+server/output.mp3

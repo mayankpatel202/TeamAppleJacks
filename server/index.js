@@ -4,15 +4,16 @@ const games = require('../database/index.js')
 const app = express();
 const getMathProblems = require('../sampleMathProblemGenerator.js')
 const bodyParser = require('body-parser');
-
 const users = require('../routes/users');
+const fs = require('fs');
+const textToSpeech = require('@google-cloud/text-to-speech');
+
+const client = new textToSpeech.TextToSpeechClient({
+  keyFilename: './ttsAuth.json'
+});
 
 app.use(express.static(__dirname + '/../client/dist'));
 app.use(bodyParser.urlencoded({extend:false}));
-
-
-
-
 
 
 const passport = require('passport'),
@@ -43,6 +44,41 @@ app.get('/home/leaderboard', function (req, res) {
   });
 });
 
+app.post('/quizQuestion', function (req, res) {
+
+  const text = req.body.question;
+
+  const request = {
+    input: { text: text },
+    voice: { languageCode: 'en-US', ssmlGender: 'NEUTRAL' },
+    audioConfig: { audioEncoding: 'MP3' }
+  };
+
+  client.synthesizeSpeech(request, (err, response) => {
+    if (err) {
+      throw err;
+    }
+
+    fs.writeFile(__dirname + '/output.mp3', response.audioContent, 'binary', err => {
+      if (err) {
+        throw err;
+      }
+
+      console.log('Audio content written to file: output.mp3');
+      res.send('written');
+    });
+  });
+});
+
+app.get('/output', function(req, res) {
+  res.sendFile(__dirname + '/output.mp3', function(err) {
+    if (err) {
+      throw err;
+    }
+
+    console.log('File sent')
+  })
+});
 
 app.get('/auth/google', passport.authenticate('google', {
   scope: ['https://www.googleapis.com/auth/plus.login']

@@ -4,3 +4,4 @@ client/dist/bundle.js
 config.js
 package-lock.json
 ttsAuth.json
+server/output.mp3

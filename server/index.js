@@ -7,10 +7,11 @@ const bodyParser = require('body-parser');
 const users = require('../routes/users');
 const fs = require('fs');
 const textToSpeech = require('@google-cloud/text-to-speech');
+const path = require('path');
 
-const client = new textToSpeech.TextToSpeechClient({
-  keyFilename: './ttsAuth.json'
-});
+// const client = new textToSpeech.TextToSpeechClient({
+//   keyFilename: './ttsAuth.json'
+// });
 
 app.use(express.static(__dirname + '/../client/dist'));
 app.use(bodyParser.urlencoded({extend:false}));

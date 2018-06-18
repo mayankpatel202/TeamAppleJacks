@@ -108,6 +108,7 @@ var retrieveGames = (res) => {
 }
 
 
+
 // Confirm if user exists
 var confirmUser = function (googleId, callback) {
   User.find({

@@ -39,7 +39,6 @@ class QuizListComponent extends React.Component {
   }
 
   render() {
-    console.log(this.props);
     let view;
     let gameOptions = [];
     let shuffledOptions =[];

@@ -94,15 +94,16 @@ var saveGames = (gameQuestion) => {
   });
   game.save((err, savedGames) => {
     if(err) console.log('Error in saving game question', err);
-    console.log('Success in saving game Question', savedGames);
+    console.log('Success in saving game Questions', savedGames);
   });
 }
 
-var retrieveGames = (callback) => {
+var retrieveGames = (res) => {
   Games.find({}, (err, gameData) => {
     if(err) console.log('Error in getting game data from database ', err);
     console.log('Success in getting game data from database ');
-    callback(gameData);
+    var data = JSON.stringify(gameData);
+    res.status(200).send(data);
   })
 }
 

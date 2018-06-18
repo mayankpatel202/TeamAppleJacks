@@ -15,13 +15,11 @@ const client = new textToSpeech.TextToSpeechClient({
 app.use(express.static(__dirname + '/../client/dist'));
 app.use(bodyParser.urlencoded({extend:false}));
 
-
-const passport = require('passport'),
-auth = require('./auth.js');
-
 //getting sample data into database
 //getMathProblems.getMathProblems();
 
+const passport = require('passport'),
+auth = require('./auth.js');
 auth(passport);
 app.use(passport.initialize());
 app.use(bodyParser.json());
@@ -109,16 +107,20 @@ app.get('/auth/google/callback', passport.authenticate('google', { failureRedire
 
     res.redirect('/')
   });
+  
+  //gets game data from database
+  app.get('/game', (req, res) => {
+    games.retrieveGames(res);
+ });
 
-app.get('/games', (req, res) => {
-  console.log(req.url);
-  games.retrieveGames((gameData) => {
-    var data = JSON.stringify(gameData);
-    res.status(200).send(data);
+  app.get('/*', function(req, res) {
+    res.sendFile(path.join(__dirname, '../client/dist/index.html'), function(err) {
+      if (err) {
+        res.status(500).send(err)
+      }
+    })
+  })
+
+  app.listen(port, () => {
+    console.log(`Listening on port: ${port}`);
   });
-});
-
-
-app.listen(port, () => {
-  console.log(`Listening on port: ${port}`);
-});

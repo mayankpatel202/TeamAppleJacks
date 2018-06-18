@@ -5,7 +5,7 @@ import LeaderboardEntry from "./LeaderboardEntry.jsx";
 //set time to render new score every 10 seconds
 const Leaderboard = ({ data }) => (
   <div className="leaderboardlist">
-    {data.map(user => <LeaderboardEntry key={user.id} user={user} />)}
+    Mayank's Always the Leader
   </div>
 );
 export default Leaderboard;

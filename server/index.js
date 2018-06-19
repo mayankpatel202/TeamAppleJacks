@@ -9,9 +9,9 @@ const fs = require('fs');
 const textToSpeech = require('@google-cloud/text-to-speech');
 const path = require('path');
 
-// const client = new textToSpeech.TextToSpeechClient({
-//   keyFilename: './ttsAuth.json'
-// });
+const client = new textToSpeech.TextToSpeechClient({
+  keyFilename: './ttsAuth.json'
+});
 
 app.use(express.static(__dirname + '/../client/dist'));
 app.use(bodyParser.urlencoded({extend:false}));
@@ -43,9 +43,13 @@ app.get('/home/leaderboard', function (req, res) {
   });
 });
 
-app.post('/quizQuestion', function (req, res) {
+let count = 0;
 
+app.post('/quizQuestion', function (req, res) {
+  console.log('This is the req bod', req.body)
   const text = req.body.question;
+  count++
+  console.log(text)
 
   const request = {
     input: { text: text },
@@ -57,8 +61,11 @@ app.post('/quizQuestion', function (req, res) {
     if (err) {
       throw err;
     }
+    // Res.send(500) instead of throwing err like that so it doesn't crash
+    // Show error on the clientside
 
-    fs.writeFile(__dirname + '/output.mp3', response.audioContent, 'binary', err => {
+
+    fs.writeFile(__dirname + `/../client/dist/output${count}.mp3`, response.audioContent, 'binary', err => {
       if (err) {
         throw err;
       }
@@ -70,7 +77,11 @@ app.post('/quizQuestion', function (req, res) {
 });
 
 app.get('/output', function(req, res) {
-  res.sendFile(__dirname + '/output.mp3', function(err) {
+
+  let count = req.params.count
+  console.log('This is the count', count)
+
+  res.sendFile(__dirname + `/output1.mp3`, function(err) {
     if (err) {
       throw err;
     }

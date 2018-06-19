@@ -3,23 +3,42 @@ import QuizListEntry from './QuizListEntry.jsx';
 import Zoom from 'react-reveal/Zoom';
 import _ from 'underscore';
 import $ from "jquery";
+import axios from 'axios';
+import Sound from 'react-sound';
 
 class QuizListComponent extends React.Component {
 
   constructor(props) {
     super(props);
     this.rightCount = 1;
-    this.state = { show: true, data: []};
+    this.state = { 
+      show: true, 
+      data: [],
+      soundURL: ''
+    };
     this.changeQuestion = this.changeQuestion.bind(this);
     this.checkAnswer = this.checkAnswer.bind(this);
+    this.sendQuestion = this.sendQuestion.bind(this);
     this.count = 0;
     this.rightCount = 0
   }
 
-  componentWillMount () {
+  componentDidMount () {
     fetch('/game')
     .then((response) => response.json())
-    .then((data)=> this.setState({data: data}));
+    .then((data)=> this.setState({data: data}))
+    .then(() => {
+      this.sendQuestion(this.state.data[this.count].Question)
+    })
+  }
+
+  sendQuestion(question) {
+    return axios.post(`/quizQuestion`, { question: question })
+    .then((response) => {
+      this.setState({
+        soundURL: 'output.mp3'
+      })
+    })
   }
 
   checkAnswer(option) {
@@ -34,7 +53,13 @@ class QuizListComponent extends React.Component {
     setTimeout(() => {
       this.setState({show: true});
     }, 0);
-    this.setState({ show: false });
+
+    this.setState({ 
+      show: false,
+      soundURL: ''
+     });
+
+    this.sendQuestion(this.state.data[this.count + 1].Question)
     this.count++;
   }
 
@@ -54,11 +79,21 @@ class QuizListComponent extends React.Component {
           <div className="quiz-question-display">{this.state.data[this.count].Question}</div> 
           <div className="option-disp">
             {shuffledOptions.map((option, index) => {
-              return <span key={index} className="quiz-options-display option-display option-focus star" onClick={() => this.checkAnswer(option)}>
+              return <span key={index} className="quiz-options-display option-display option-focus star" onClick={() => {this.checkAnswer(option)}}>
                 {option}
               </span>
             })}
           </div>
+          {(this.state.soundURL.length > 0) ? (
+            // <Sound
+            //   url={this.state.soundURL}
+            //   playStatus={Sound.status.PLAYING}
+            // />
+            <audio controls>
+              <source src={`output${this.count + 1}.mp3`} type="audio/mpeg"/>
+            </audio> 
+          ) : null }
+
             <button className="quiz-button-display click-press" onClick={() => this.changeQuestion()}>SUBMIT</button>
         </div>
     </Zoom> : 

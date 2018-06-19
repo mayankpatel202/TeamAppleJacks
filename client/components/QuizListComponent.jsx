@@ -4,6 +4,7 @@ import Zoom from 'react-reveal/Zoom';
 import _ from 'underscore';
 import $ from "jquery";
 import axios from 'axios';
+import Sound from 'react-sound';
 
 class QuizListComponent extends React.Component {
 
@@ -13,12 +14,11 @@ class QuizListComponent extends React.Component {
     this.state = { 
       show: true, 
       data: [],
-      mp3: ''
+      soundURL: ''
     };
     this.changeQuestion = this.changeQuestion.bind(this);
     this.checkAnswer = this.checkAnswer.bind(this);
-    this.getAudioFile = this.getAudioFile.bind(this);
-    this.textToSpeech = this.textToSpeech.bind(this);
+    this.sendQuestion = this.sendQuestion.bind(this);
     this.count = 0;
     this.rightCount = 0
   }
@@ -26,39 +26,18 @@ class QuizListComponent extends React.Component {
   componentDidMount () {
     fetch('/game')
     .then((response) => response.json())
-    .then((data)=> {
-      console.log('This is the data', data)
-      if (data && data !== this.state.data) {
-        this.setState({data: data})
-      }
-    })
+    .then((data)=> this.setState({data: data}))
     .then(() => {
-      return this.textToSpeech(this.state.data[this.count].Question)
-      // .then(() => {
-      //   this.getAudioFile();
-      // })
-    })
-    .then(() => {
-      this.getAudioFile();
+      this.sendQuestion(this.state.data[this.count].Question)
     })
   }
 
-  // componentDidUpdate() {
-  //   this.textToSpeech()
-  //   this.getAudioFile();
-  // }
-
-  textToSpeech(question) {
-    return axios.post('/quizQuestion', { question: question })
-    .catch((err) => {
-      throw new Error('Failed the text to speech request');
-    })
-  }
-
-  getAudioFile() {
-    return axios.get('/output')
-    .catch((err) => {
-      throw new Error('Failed to load audio');
+  sendQuestion(question) {
+    return axios.post(`/quizQuestion`, { question: question })
+    .then((response) => {
+      this.setState({
+        soundURL: 'output.mp3'
+      })
     })
   }
 
@@ -74,7 +53,13 @@ class QuizListComponent extends React.Component {
     setTimeout(() => {
       this.setState({show: true});
     }, 0);
-    this.setState({ show: false });
+
+    this.setState({ 
+      show: false,
+      soundURL: ''
+     });
+
+    this.sendQuestion(this.state.data[this.count + 1].Question)
     this.count++;
   }
 
@@ -94,18 +79,21 @@ class QuizListComponent extends React.Component {
           <div className="quiz-question-display">{this.state.data[this.count].Question}</div> 
           <div className="option-disp">
             {shuffledOptions.map((option, index) => {
-              // if (index === 0) {
-              //   this.textToSpeech(this.state.data[this.count].Question)
-              // }
-
-              return <span key={index} className="quiz-options-display option-display option-focus star" onClick={() => this.checkAnswer(option)}>
+              return <span key={index} className="quiz-options-display option-display option-focus star" onClick={() => {this.checkAnswer(option)}}>
                 {option}
               </span>
             })}
           </div>
-          <audio controls>
-            <source src='output.mp3' type='audio/mpeg' />
-          </audio>
+          {(this.state.soundURL.length > 0) ? (
+            // <Sound
+            //   url={this.state.soundURL}
+            //   playStatus={Sound.status.PLAYING}
+            // />
+            <audio controls>
+              <source src={`output${this.count + 1}.mp3`} type="audio/mpeg"/>
+            </audio> 
+          ) : null }
+
             <button className="quiz-button-display click-press" onClick={() => this.changeQuestion()}>SUBMIT</button>
         </div>
     </Zoom> : 

@@ -102,6 +102,7 @@ class QuizListComponent extends React.Component {
 
             <button className="quiz-button-display click-press" onClick={() => this.changeQuestion()}>SUBMIT</button>
         </div>
+        
     </Zoom> : 
 
     <div className="quiz-results"> 

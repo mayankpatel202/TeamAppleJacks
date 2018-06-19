@@ -3,8 +3,8 @@ import QuizListEntry from './QuizListEntry.jsx';
 import Zoom from 'react-reveal/Zoom';
 import _ from 'underscore';
 import $ from "jquery";
-import axios from 'axios';
 import Sound from 'react-sound';
+import axios from 'Axios';
 
 class QuizListComponent extends React.Component {
 
@@ -20,7 +20,7 @@ class QuizListComponent extends React.Component {
     this.checkAnswer = this.checkAnswer.bind(this);
     this.sendQuestion = this.sendQuestion.bind(this);
     this.count = 0;
-    this.rightCount = 0
+    this.rightCount = 1;
   }
 
   componentDidMount () {
@@ -39,6 +39,10 @@ class QuizListComponent extends React.Component {
         soundURL: 'output.mp3'
       })
     })
+    .then((data)=> { 
+      this.setState({data: data});
+      this.count = 0;
+    });
   }
 
   checkAnswer(option) {
@@ -71,9 +75,11 @@ class QuizListComponent extends React.Component {
     if(this.state.data.length > 0) {
       gameOptions.push(this.state.data[this.count].Option1, this.state.data[this.count].Option2, this.state.data[this.count].Answer);
       shuffledOptions = _.shuffle(gameOptions);
-
+   
       view = this.count <= 4 ? 
+      
       <Zoom when={this.state.show}>
+
         <div className="quiz-list-container"> 
           <div className="quiz-list-display">{`Question number ${this.count + 1}`}</div>
           <div className="quiz-question-display">{this.state.data[this.count].Question}</div> 

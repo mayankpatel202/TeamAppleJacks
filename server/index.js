@@ -9,10 +9,11 @@ const fs = require('fs');
 const textToSpeech = require('@google-cloud/text-to-speech');
 const path = require('path');
 
-const client = new textToSpeech.TextToSpeechClient({
-  keyFilename: './ttsAuth.json'
-});
+// const client = new textToSpeech.TextToSpeechClient({
+//   keyFilename: './Quiz.json'
+// });
 
+console.log(__dirname);
 app.use(express.static(__dirname + '/../client/dist'));
 app.use(bodyParser.urlencoded({
   extend: false
@@ -61,45 +62,40 @@ app.get('/home/leaderboard', function (req, res) {
   });
 });
 
-let count = 0;
+// app.post('/quizQuestion', function (req, res) {
+//   console.log('HEYHEY', req.body)
+//   const text = req.body.question;
 
-app.post('/quizQuestion', function (req, res) {
-  console.log('This is the req bod', req.body)
-  const text = req.body.question;
-  count++
-  console.log(text)
+//   const request = {
+//     input: { text: text },
+//     voice: { languageCode: 'en-US', ssmlGender: 'NEUTRAL' },
+//     audioConfig: { audioEncoding: 'MP3' }
+//   };
 
-  const request = {
-    input: {
-      text: text
-    },
-    voice: {
-      languageCode: 'en-US',
-      ssmlGender: 'NEUTRAL'
-    },
-    audioConfig: {
-      audioEncoding: 'MP3'
-    }
-  };
+//   client.synthesizeSpeech(request, (err, response) => {
+//     if (err) {
+//       throw err;
+//     }
 
-  client.synthesizeSpeech(request, (err, response) => {
-    if (err) {
-      throw err;
-    }
-    // Res.send(500) instead of throwing err like that so it doesn't crash
-    // Show error on the clientside
+//     fs.writeFile(__dirname + '/../client/dist/output.mp3', response.audioContent, 'binary', err => {
+//       if (err) {
+//         throw err;
+//       }
 
+//       console.log('Audio content written to file: output.mp3');
+//     });
 
-    fs.writeFile(__dirname + `/../client/dist/output${count}.mp3`, response.audioContent, 'binary', err => {
-      if (err) {
-        throw err;
-      }
+//     fs.writeFile(__dirname + '/../client/components/output.mp3', response.audioContent, 'binary', err => {
+//       if (err) {
+//         throw err;
+//       }
 
-      console.log('Audio content written to file: output.mp3');
-      res.send('written');
-    });
-  });
-});
+//       console.log('Audio content written to file: output.mp3');
+//       res.send('written');
+//     });
+
+//   });
+// });
 
 app.get('/output', function (req, res) {
 

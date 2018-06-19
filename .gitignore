@@ -5,3 +5,4 @@ config.js
 package-lock.json
 ttsAuth.json
 server/output.mp3
+Quiz.json

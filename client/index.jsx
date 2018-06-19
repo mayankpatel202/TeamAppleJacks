@@ -24,9 +24,9 @@ class App extends React.Component {
           </div>
           <Route exact path="/" component={Root} />
           <Route path="/games" render={(props) => <QuizListComponent {...props} />} />
-          <Route path="/leaderboard" component={Leaderboard}/>
-        </div> 
-      </BrowserRouter> 
+          <Route path="/leaderboard" component={Leaderboard} />
+        </div>
+      </BrowserRouter>
     );
   }
 }
